@@ -1,0 +1,512 @@
+<!doctype html>
+<!--
+  CS571 Midterm Reference Sheet (Lectures 1-13). Source for midterm-cheatsheet.pdf.
+  Fonts: Red Hat Text / Display / Mono (SIL OFL, see fonts/OFL.txt), loaded locally.
+  Rebuild (PowerShell, from this folder):
+    & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --no-pdf-header-footer `
+      --generate-pdf-document-outline --print-to-pdf="$PWD\midterm-cheatsheet.pdf" "$PWD\midterm-cheatsheet.html"
+  Must stay at exactly 2 pages; check the page count after any content change.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS571 Midterm Reference Sheet</title>
+<style>
+  @font-face { font-family: 'Red Hat Text'; src: url('fonts/RedHatText-400.ttf') format('truetype'); font-weight: 400; font-style: normal; }
+  @font-face { font-family: 'Red Hat Text'; src: url('fonts/RedHatText-500.ttf') format('truetype'); font-weight: 500; font-style: normal; }
+  @font-face { font-family: 'Red Hat Text'; src: url('fonts/RedHatText-700.ttf') format('truetype'); font-weight: 700; font-style: normal; }
+  @font-face { font-family: 'Red Hat Text'; src: url('fonts/RedHatText-Italic-400.ttf') format('truetype'); font-weight: 400; font-style: italic; }
+  @font-face { font-family: 'Red Hat Display'; src: url('fonts/RedHatDisplay-500.ttf') format('truetype'); font-weight: 500; }
+  @font-face { font-family: 'Red Hat Display'; src: url('fonts/RedHatDisplay-700.ttf') format('truetype'); font-weight: 700; }
+  @font-face { font-family: 'Red Hat Display'; src: url('fonts/RedHatDisplay-900.ttf') format('truetype'); font-weight: 900; }
+  @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-400.ttf') format('truetype'); font-weight: 400; }
+  @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-500.ttf') format('truetype'); font-weight: 500; }
+  @font-face { font-family: 'Red Hat Mono'; src: url('fonts/RedHatMono-600.ttf') format('truetype'); font-weight: 600; }
+
+  :root {
+    --red: #C5050C;
+    --dark-red: #9B0000;
+    --ink: #121212;
+    --muted: #5B5B5B;
+    --rule: #D4D4D4;
+    --code-bg: #F2F2F2;
+    --th-bg: #F4F4F4;
+  }
+
+  @page {
+    size: letter;
+    margin: 0.34in 0.34in 0.44in 0.34in;
+    @bottom-left {
+      content: "CS571 Building User Interfaces \00B7  Midterm Reference Sheet \00B7  Fall 2026";
+      font-family: 'Red Hat Text', Arial, sans-serif;
+      font-size: 7pt;
+      color: #5B5B5B;
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Red Hat Display', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 7pt;
+      color: #C5050C;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { font-size: 8pt; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: var(--ink);
+    font-family: 'Red Hat Text', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.2;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    background: var(--red);
+    color: #fff;
+    padding: 7pt 10pt 6.5pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .masthead .kicker {
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 700;
+    font-size: 6.75pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .masthead h1 {
+    margin: 1pt 0 0;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 900;
+    font-size: 17pt;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .masthead .meta {
+    text-align: right;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 500;
+    font-size: 8pt;
+    line-height: 1.3;
+  }
+  .masthead .meta b { font-weight: 900; font-size: 10.5pt; }
+  .masthead .pdf {
+    display: block;
+    width: fit-content;
+    margin: 3pt 0 0 auto;
+    padding: 4pt 7pt;
+    border: 0.8pt solid #fff;
+    color: #fff;
+    font-weight: 700;
+    font-size: 7pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .masthead .pdf:hover, .masthead .pdf:focus-visible { background: #fff; color: var(--red); }
+  .masthead .pdf:focus-visible { outline: 1.5pt solid #fff; outline-offset: 1.5pt; }
+
+  .index {
+    border-bottom: 1.25pt solid var(--red);
+    padding: 3pt 0;
+    margin-bottom: 5pt;
+    font-size: 7.25pt;
+    line-height: 1.45;
+  }
+  .index a { color: var(--ink); text-decoration: none; white-space: nowrap; margin-right: 6pt; }
+  .index a b { color: var(--red); font-family: 'Red Hat Display', sans-serif; font-weight: 900; margin-right: 1.5pt; }
+
+  /* ---------- Columns ---------- */
+  .cols {
+    column-count: 2;
+    column-gap: 0.2in;
+    column-rule: 0.5pt solid var(--rule);
+  }
+
+  /* ---------- Lecture headings ---------- */
+  h2 {
+    position: relative;
+    margin: 5.5pt 0 1.75pt;
+    padding-bottom: 1.25pt;
+    border-bottom: 1.1pt solid var(--red);
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 700;
+    font-size: 10pt;
+    line-height: 1.15;
+    color: var(--red);
+    break-after: avoid;
+    break-inside: avoid;
+  }
+  .cols > h2:first-child { margin-top: 0; }
+  h2 .num {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-weight: 900;
+    font-size: 8pt;
+    padding: 0.75pt 3.5pt 0.25pt;
+    margin-right: 1pt;
+    position: relative;
+    top: -0.75pt;
+  }
+  h2[data-tag]::after {
+    content: attr(data-tag);
+    position: absolute;
+    right: 0;
+    bottom: 2.25pt;
+    font-size: 6pt;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sub {
+    margin: 3.5pt 0 1pt;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 700;
+    font-size: 7.25pt;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--dark-red);
+    break-after: avoid;
+  }
+
+  /* ---------- Body text ---------- */
+  p { margin: 1.5pt 0; }
+  ul { margin: 1pt 0 2pt; padding-left: 9.5pt; list-style: square; }
+  ul ul { margin: 0.5pt 0 0.5pt; }
+  li { margin: 0.4pt 0; }
+  li::marker { color: var(--red); }
+  b, strong { font-weight: 700; }
+
+  code {
+    font-family: 'Red Hat Mono', Consolas, monospace;
+    font-size: 0.92em;
+    font-weight: 500;
+    background: var(--code-bg);
+    padding: 0 1.25pt;
+  }
+  pre {
+    margin: 2pt 0 2.5pt;
+    padding: 2.75pt 4.5pt;
+    background: var(--code-bg);
+    border-top: 0.75pt solid #C4C4C4;
+    font-family: 'Red Hat Mono', Consolas, monospace;
+    font-size: 7.2pt;
+    line-height: 1.25;
+    white-space: pre-wrap;
+    break-inside: avoid;
+  }
+  pre code { background: none; padding: 0; font-size: 1em; font-weight: 400; }
+  pre .c { color: #6E6E6E; }
+  pre .k { color: var(--dark-red); font-weight: 600; }
+  .ok { color: #1F7A3A; font-weight: 700; }
+  .no { color: var(--red); font-weight: 700; }
+  .note { color: var(--muted); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2pt 0 2.5pt;
+    font-size: 7.4pt;
+    line-height: 1.17;
+    break-inside: avoid;
+  }
+  th {
+    text-align: left;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 700;
+    background: var(--th-bg);
+    border-top: 0.9pt solid var(--ink);
+    border-bottom: 0.6pt solid var(--ink);
+    padding: 1.25pt 2.5pt;
+  }
+  td {
+    vertical-align: top;
+    border-bottom: 0.5pt solid var(--rule);
+    padding: 1pt 2.5pt;
+  }
+  td:first-child { font-weight: 700; white-space: nowrap; }
+  table.wrap td:first-child { white-space: normal; }
+  table.els td:first-child { font-weight: 400; }
+  table.split { break-inside: auto; }
+  table.split tr { break-inside: avoid; }
+  table.codes td { white-space: nowrap; }
+  table.codes td:nth-child(odd) { font-weight: 700; }
+  table.codes td:nth-child(even) { font-weight: 400; }
+
+  /* ---------- Small flow diagrams ---------- */
+  .flow { display: flex; margin: 2pt 0 3pt; break-inside: avoid; break-after: avoid; font-family: 'Red Hat Display', sans-serif; }
+  .flow .stage { flex: 1; text-align: center; }
+  .flow .grp {
+    font-size: 6pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); border-bottom: 0.6pt solid var(--muted); margin: 0 2pt 1.5pt; padding-bottom: 0.5pt;
+  }
+  .flow .steps { display: flex; gap: 2pt; padding: 0 1pt; }
+  .flow .step { flex: 1; border: 0.8pt solid var(--red); color: var(--red); font-weight: 700; font-size: 7pt; padding: 1.25pt 0; }
+  .chain { display: flex; align-items: center; gap: 3pt; margin: 2pt 0 3pt; font-family: 'Red Hat Display', sans-serif; break-inside: avoid; break-after: avoid; }
+  .chain .step { border: 0.8pt solid var(--red); color: var(--red); font-weight: 700; font-size: 7.25pt; padding: 1pt 5pt; }
+  .chain .step.fill { background: var(--red); color: #fff; }
+  .chain .arr { color: var(--muted); font-weight: 700; }
+
+  .keepnext { break-after: avoid; }
+  .two { display: grid; grid-template-columns: 0.62fr 1.38fr; gap: 6pt; align-items: start; break-inside: avoid; }
+  .two table { margin: 2pt 0 2.5pt; }
+
+  /* ---------- Responsive (screen only, so the PDF layout is untouched) ---------- */
+  @media screen and (max-width: 767.98px) {
+    .cols { column-count: 1; }
+    .masthead { gap: 8pt; }
+    .masthead .meta b { white-space: nowrap; }
+  }
+  @media screen and (max-width: 359.98px) {
+    table.codes td { white-space: normal; }
+  }
+  @media print {
+    .masthead .pdf { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div>
+    <div class="kicker">University of Wisconsin&ndash;Madison &middot; CS 571 Building User Interfaces</div>
+    <h1>Midterm Exam Reference Sheet</h1>
+  </div>
+  <div class="meta"><b>Lectures 1&ndash;13</b><br>Fall 2026<a class="pdf" href="cs571-f26-midterm-cheatsheet.pdf" download>Download as PDF</a></div>
+</header>
+
+<main class="cols">
+
+<!-- ===================================================== 01 -->
+<h2 id="l01"><span class="num">01</span> Introduction</h2>
+<ul>
+  <li><b>JSON</b>: a human-readable, language-agnostic text format for structured data. Types: string, number, boolean, array, object, <code>null</code>; values can nest.</li>
+</ul>
+
+<!-- ===================================================== 02 -->
+<h2 id="l02" data-tag="HTML &middot; CSS &middot; JS"><span class="num">02</span> Web Dev Basics 1</h2>
+<ul>
+  <li><b>Including CSS/JS:</b> inline, internal (<code>&lt;style&gt;</code>/<code>&lt;script&gt;</code>), or external (<code>&lt;link&gt;</code>/<code>&lt;script src&gt;</code>). <b>Prefer external.</b></li>
+  <li><b>Cascade:</b> the style closest to the element wins; <code>!important</code> overrides.</li>
+  <li><code>var</code>: function scope &middot; <code>let</code>/<code>const</code>: block scope (<code>const</code> can&rsquo;t be re-assigned). Function <i>definitions</i> are hoisted; expressions and arrow functions are not.</li>
+  <li><b>Falsy:</b> <code>false</code> <code>undefined</code> <code>null</code> <code>0</code> <code>NaN</code> <code>""</code></li>
+</ul>
+
+<!-- ===================================================== 03 -->
+<h2 id="l03" data-tag="JSON &middot; APIs &middot; fetch"><span class="num">03</span> Web Dev Basics 2</h2>
+<ul>
+  <li><b>JS object</b> = executable code; <b>JSON</b> = language-agnostic representation (<code>"quoted"</code> keys, no comments, no trailing commas).</li>
+  <li><code>JSON.parse</code>: string &rarr; object &middot; <code>JSON.stringify</code>: object &rarr; string.</li>
+  <li><b>API:</b> definitions and protocols for communication via serialization and de-serialization of objects.</li>
+  <li><b>Promise:</b> the eventual completion or failure of an async operation. <code>fetch</code> is async and non-blocking, so code after it runs <i>before</i> its <code>.then</code>.</li>
+  <li><b>Callback:</b> a function passed as an argument and invoked inside the outer function.</li>
+</ul>
+
+<!-- ===================================================== 04 -->
+<h2 id="l04" data-tag="Declarative JS &middot; Bootstrap"><span class="num">04</span> Web Dev Basics 3</h2>
+<ul>
+  <li><b>Declarative</b> = <i>what</i> (preferred) &middot; <b>imperative</b> = <i>how</i>.</li>
+  <li><code>filter(cb)</code> &rarr; new array of the elements where <code>cb</code> returns <code>true</code> &middot; <code>map(cb)</code> &rarr; new array of each <code>cb</code> return value &middot; <code>some</code>/<code>every</code> &rarr; boolean (any/all pass) &middot; <code>reduce((prev, curr) =&gt; &hellip;, start)</code> &rarr; one value.</li>
+  <li><code>a ?? b</code> &rarr; <code>b</code> only if <code>a</code> is <code>null</code>/<code>undefined</code>. Spread <code>{...a}</code> = <i>shallow</i> copy; <code>JSON.parse(JSON.stringify(a))</code> = <i>deep</i> copy.</li>
+  <li><b>Bootstrap</b> categories: Layouts, Content, Components, Utilities. <b>Responsive design:</b> adapts to screen sizes via width <i>breakpoints</i>.</li>
+  <li><code>container</code> &rarr; <code>row</code> &rarr; <code>col-*</code> out of <b>12</b>. Breakpoints run small &rarr; large: <code>xs</code> <code>sm</code> <code>md</code> <code>lg</code> <code>xl</code> <code>xxl</code>. Each class applies at its breakpoint <i>and up</i>, so <code>col-12 col-md-6 col-lg-3</code> = 1, then 2, then 4 per row.</li>
+</ul>
+
+<!-- ===================================================== 05 -->
+<h2 id="l05" data-tag="Design"><span class="num">05</span> Design Thinking</h2>
+<div class="flow">
+  <div class="stage"><div class="grp">Understand</div><div class="steps"><div class="step">Empathize</div><div class="step">Define</div></div></div>
+  <div class="stage"><div class="grp">Explore</div><div class="steps"><div class="step">Ideate</div><div class="step">Prototype</div></div></div>
+  <div class="stage"><div class="grp">Materialize</div><div class="steps"><div class="step">Test</div><div class="step">Implement</div></div></div>
+</div>
+<ul>
+  <li><b>Design thinking:</b> an <i>approach</i> (hands-on, user-centric problem solving) and a <i>process</i> (above).</li>
+  <li><b>Empathize:</b> learn what users <i>do, say, think, feel</i> (contextual inquiry, ethnography, diary studies, cultural probes).</li>
+  <li><b>Contextual inquiry:</b> go where the user works/lives &rarr; observe &rarr; talk. It is an inquiry, <i>not an interview</i>; the client is the <i>master</i>, you are the <i>apprentice</i>; don&rsquo;t distract from the task.</li>
+  <li><b>Define:</b> gather &rarr; analyze &rarr; recommend (insight).</li>
+  <li><b>Affinity diagramming</b> (affinity mapping, collaborative sorting, snowballing): cluster messy qualitative data by &ldquo;affinity.&rdquo; Bottom-up: disorganized notes &rarr; group by likeness &rarr; consult team &rarr; re-organize &rarr; name each theme.</li>
+  <li><b>Ideation:</b> active, creative, exploratory, highly iterative, fast-moving collaborative idea generation. Consider workspace, team, process, rules of engagement, and how ideas are captured.</li>
+  <li><b>IDEO rules:</b> defer judgment &middot; encourage wild ideas &middot; build on others&rsquo; ideas &middot; stay focused &middot; one conversation at a time &middot; be visual &middot; go for quantity.</li>
+  <li><b>Conceptual design:</b> an abstract characterization of the context, use, or experience of an envisioned solution, highlighting its main premise.</li>
+  <li><b>Sketches</b> are quick, cheap, disposable, plentiful, and annotated. A <b>storyboard</b> is a sequence of frames showing interaction with the system, capturing social, environmental, and technical factors.</li>
+  <li><b>Prototype:</b> real, tactile representations of ideas. <b>Test:</b> expert-based review or user-based testing. <b>Implement:</b> put the vision into effect.</li>
+  <li><b>Think-aloud:</b> representative users do representative tasks; observe and record what they say and do (obstacles, pain points, failures). It can be moderated/unmoderated, field/lab, and concurrent/retrospective.</li>
+</ul>
+
+<!-- ===================================================== 06 -->
+<h2 id="l06" data-tag="React Basics"><span class="num">06</span> Web Dev 1</h2>
+<ul>
+  <li><b>Virtual DOM:</b> describe <i>what</i>; React updates the DOM. <b>Reconciliation:</b> diffing and syncing the virtual and real DOM.</li>
+  <li><code>react</code> = platform-agnostic reconciler &middot; <code>react-dom</code> &rarr; browser &middot; <code>react-native</code> &rarr; iOS/Android.</li>
+  <li>Setting state is <b>async</b> (the old value persists until re-render). <code>setX(old =&gt; &hellip;)</code> updates from the previous value. Initial state applies on mount only.</li>
+  <li><b>HTTP 429</b> = forgot the <code>[]</code> on a fetching <code>useEffect</code> (infinite loop). <b>HTTP 401</b> = missing <code>X-CS571-ID</code> header.</li>
+</ul>
+
+<!-- ===================================================== 07 -->
+<h2 id="l07" data-tag="Design"><span class="num">07</span> Visual Design</h2>
+<table class="wrap els">
+  <tr><th style="width:47%">7 Elements of design</th><th>7 Principles of design</th></tr>
+  <tr><td><b>Space</b>: positive (subject) / negative (around it)</td><td><b>Focal point</b>: where attention goes first</td></tr>
+  <tr><td><b>Line</b>: divides space, calls attention, organizes</td><td><b>Contrast</b>: very different elements guide attention</td></tr>
+  <tr><td><b>Shape</b>: space outlined by a contour</td><td><b>Balance</b>: symmetry or asymmetry</td></tr>
+  <tr><td><b>Size</b> (scale): relative extent</td><td><b>Movement</b>: a flow directing attention</td></tr>
+  <tr><td><b>Pattern</b> (repetition): systematic duplication</td><td><b>Rhythm</b>: patterned use conveying movement/order</td></tr>
+  <tr><td><b>Texture</b>: tactile/visual quality</td><td><b>Perspective</b>: sense of horizon and depth</td></tr>
+  <tr><td><b>Value</b>: intensity of expression</td><td><b>Unity</b>: holistic consistency</td></tr>
+</table>
+<ul>
+  <li><b>Glyph</b> = a character &middot; <b>typeface</b> = a design of glyphs (Garamond) &middot; <b>font</b> = one instance (Garamond Bold 12pt).</li>
+  <li><b>Serif</b> (old-style tapered; modern/slab very thin/thick) &middot; <b>sans serif</b> (none, uniform stroke) &middot; <b>script</b> (cursive, connected) &middot; <b>decorative</b> (evokes a context or feeling).</li>
+  <li><b>Font parameters:</b> style (bold, italic, oblique), caps (all/small caps), weight.</li>
+  <li><b>Leading</b> = line spacing &middot; <b>tracking</b> = overall letter spacing &middot; <b>kerning</b> = space between a letter pair &middot; <b>widows/orphans</b> = stranded words or lines &middot; <b>rag</b> = uneven text edge &middot; <b>rivers</b> = white gaps down a paragraph.</li>
+  <li><b>Color:</b> the perception of light reflecting from an object; it creates emphasis, organizes, and evokes emotion. <b>Tint</b> = hue + white, <b>shade</b> = + black, <b>tone</b> = + gray. <b>HSV</b> = hue, saturation (gray &rarr; vivid), value (light &rarr; dark).</li>
+</ul>
+<ul>
+  <li><b>Palettes:</b> <b>analogous</b> (adjacent hues) &middot; <b>complementary</b> (opposite hues) &middot; <b>split complementary</b> (a hue + its complement&rsquo;s two neighbors) &middot; <b>triadic</b> (three evenly spaced hues) &middot; <b>monochromatic</b> (one hue&rsquo;s tints, shades, and tones) &middot; <b>achromatic</b> (black, white, grays).</li>
+  <li><b>Color-blind safe:</b> emphasize with <i>intensity</i> (not hue); mind the <i>size</i> of colored elements and the <i>proximity</i> of similar colors.</li>
+</ul>
+
+<!-- ===================================================== 08 -->
+<h2 id="l08" data-tag="Lifecycle &middot; Lists &middot; Inputs"><span class="num">08</span> Web Dev 2</h2>
+<div class="chain"><span class="step fill">Trigger</span><span class="arr">&rarr;</span><span class="step fill">Render</span><span class="arr">&rarr;</span><span class="step fill">Commit</span><span class="arr">&rarr;</span><span class="step">useEffects</span></div>
+<ul>
+  <li><b>Trigger</b> = initial render, state change, or parent re-render (can be batched). <b>Render</b> = run the component &rarr; virtual DOM. <b>Commit</b> = sync to the real DOM (expensive, periodic).</li>
+  <li><code>useEffect(cb, [])</code> runs on mount only &middot; <code>[a]</code> on mount + when <code>a</code> changes &middot; no array: every render. Use it to sync with <i>external systems</i>; compute derived values during render instead of in effects.</li>
+  <li><b><code>key</code></b>: on the parent-most element in a list; unique among siblings; avoid the index.</li>
+  <li><b>Controlled</b> input = <code>value</code> + <code>onChange</code> &middot; <b>uncontrolled</b> = <code>useRef</code>. Pair the input&rsquo;s <code>id</code> with the label&rsquo;s <code>htmlFor</code>.</li>
+</ul>
+
+<!-- ===================================================== 09 -->
+<h2 id="l09" data-tag="Design"><span class="num">09</span> Web Design</h2>
+<ul>
+  <li><b>WIMP</b> = Windows, Icons, Menus, Pointer (the desktop paradigm).</li>
+  <li><b>Windows</b> are resizable app containers. <i>Primary</i> = main function (canvas). <i>Secondary</i> = support via <i>modal</i>/<i>modeless</i> operations. They are <i>overlapping</i> or <i>tiled</i>; secondary windows are <i>docked</i>, <i>stacked</i>, or <i>floating</i>.</li>
+  <li><b>Menus</b> list all functions (educational, reference). <b>Toolbars, palettes, sidebars, tooltips</b> = frequently used functions. <b>Tool palettes</b> = advanced controls. <b>Pointing</b> = direct manipulation.</li>
+  <li><b>Desktop:</b> complexity in <i>functionality</i>. <b>Web:</b> complexity in <i>information structure</i>; the page is the building block.</li>
+  <li><b>Primary nav aids</b> = menus/menubars for major sections. <b>Secondary</b> = comprehensive links (fat, left-hand, footer nav). <b>Breadcrumbs</b> and hierarchical lists lead back home.</li>
+  <li><b>The fold:</b> what&rsquo;s visible on load vs. below. <b>Pagination</b> (discrete pages) vs <b>infinite scroll</b> (incremental). <b>Search</b> lists content by query; <b>faceted search</b> sorts and filters the results.</li>
+</ul>
+<div class="sub">Layout</div>
+<ul>
+  <li><b>Layout</b> = arranging visual elements on a canvas. <b>Focal point:</b> the center of visual interest; it locks attention, then guides it onward.</li>
+  <li><b>Golden ratio</b> <code>1:1.618</code> (asymmetrical but balanced). <b>Rule of thirds:</b> a 3&times;3 grid whose intersections are focal points.</li>
+  <li><b>Imagery:</b> on top, not bottom; facing the next focal point; never flipped; don&rsquo;t interrupt headlines or wrap text.</li>
+  <li><b>Gestalt:</b> <i>proximity</i> (near = grouped) &middot; <i>similarity</i> (alike = related) &middot; <i>continuity</i> (follow lines) &middot; <i>closure</i> (complete shapes).</li>
+  <li><b>Grids:</b> an orderly, balanced framework. <b>Type:</b> headlines and text blocks guide attention. <b>Negative space:</b> a visual break and balance.</li>
+  <li><b>Visual hierarchy:</b> position and size show importance. <b>Scan patterns:</b> F and Z. <b>Contrast/emphasis:</b> position, size, color, type.</li>
+  <li><b>Design patterns.</b> Pros: save time, better quality, familiarity, a baseline. Con: may not exist for new design spaces.</li>
+</ul>
+
+<!-- ===================================================== 10 -->
+<h2 id="l10" data-tag="State &middot; Routing"><span class="num">10</span> Web Dev 3</h2>
+<ul>
+  <li><b>Sharing state:</b> callbacks (child &rarr; parent), context, browser storage, cookies + API, libraries (Redux&hellip;). <b>Prop drilling</b> = bad practice.</li>
+  <li><b>Context:</b> <code>createContext()</code> &rarr; <code>&lt;Ctx.Provider value={&hellip;}&gt;</code> &rarr; <code>useContext(Ctx)</code> in any descendant.</li>
+  <li><b>Cookies</b>: usually set by the server (<code>Set-Cookie</code>). <b>sessionStorage</b>: form data, cleared when the tab closes. <b>localStorage</b>: long-lasting data, persists until cleared. All three store <b>strings</b> only and <b>don&rsquo;t re-render</b>.</li>
+  <li>React is a <b>library, not a framework</b>. Routers: <code>Browser</code> (typical), <code>Memory</code> (path hidden), <code>Hash</code> (SPA deploys, e.g. GitLab Pages), <code>Static</code> (server-side rendering).</li>
+  <li><code>&lt;Outlet/&gt;</code> renders the matched child route &middot; <code>index</code> = default child &middot; <code>path="*"</code> = catch-all.</li>
+</ul>
+
+<!-- ===================================================== 11 -->
+<h2 id="l11" data-tag="Design"><span class="num">11</span> Interaction Design</h2>
+<ul>
+  <li><b>Interaction design:</b> defining system behaviors that engage the user&rsquo;s full <i>perception, cognition, and movement</i>. Unlike visual design, it is tied to behavior and context.</li>
+  <li><b>5 dimensions:</b> 1D words &middot; 2D visuals &middot; 3D physical objects/space &middot; 4D time &middot; 5D behavior.</li>
+  <li><b>Design paradigm:</b> an archetypal solution or approach to design problems.
+    <ul>
+      <li><b>Implementation-centric:</b> mirrors how functions are implemented. Easy to build and debug, but users must learn the functions and can&rsquo;t do high-level actions.</li>
+      <li><b>Metaphoric:</b> a real-world metaphor jump-starts mental models and eliminates learning. A <i>global</i> metaphor suits expert interfaces, but doesn&rsquo;t scale, lacks analogs for new capabilities, and varies by culture.</li>
+      <li><b>Idiomatic:</b> dedicated, expressive interactions users <i>must learn</i> (e.g. cursor &harr; mouse).</li>
+    </ul>
+  </li>
+  <li><b>Affordance:</b> perceived properties that hint at how to interact. <b>True</b>: implies the action. <b>False</b>: perceived but doesn&rsquo;t work. <b>Hidden</b>: exists but not obvious.</li>
+  <li><b>Navigation principles:</b>
+    <ul>
+      <li><b>Wayfinding:</b> signage, environmental clues, maps.</li>
+      <li><b>Cost:</b> the time and effort to navigate; minimize context switches, errors, delays, and steps.</li>
+      <li><b>Aids:</b> global (menus, tabs), utility (sign in, help), associative/in-line (related links).</li>
+      <li><b>Models:</b> see the table.</li>
+    </ul>
+  </li>
+</ul>
+<table class="wrap split">
+  <tr><th style="width:24%">Nav model</th><th>Definition</th></tr>
+  <tr><td>Hub &amp; spoke</td><td>a central hub links to and from specialized components</td></tr>
+  <tr><td>Fully connected</td><td>a central page links to all; all link to each other</td></tr>
+  <tr><td>Multi-level</td><td>main components fully connected; sub-components only among themselves</td></tr>
+  <tr><td>Stepwise</td><td>a sequential/branching process (checkout)</td></tr>
+  <tr><td>Pyramid</td><td>stepwise + jump to the hub and back at each step</td></tr>
+  <tr><td>Pan-and-zoom</td><td>continuous movement over a large space (map, document)</td></tr>
+  <tr><td>Flat</td><td>a central workspace is always visible; no context switch</td></tr>
+  <tr><td>Modal panel</td><td>flat + temporary modal dialogs over the canvas</td></tr>
+  <tr><td>Clear entry points</td><td>direct to frequent functions, skipping the hierarchy</td></tr>
+  <tr><td>Bookmarks</td><td>jump to a chosen point, even deep inside</td></tr>
+  <tr><td>Escape hatch</td><td>back to the main page without retracing steps</td></tr>
+</table>
+
+<!-- ===================================================== 12 -->
+<h2 id="l12" data-tag="APIs &middot; useRef &middot; Cookies"><span class="num">12</span> Web Dev 4</h2>
+<div class="two">
+<table>
+  <tr><th>CRUD</th><th>HTTP</th></tr>
+  <tr><td>Create</td><td><code>POST</code></td></tr>
+  <tr><td>Read</td><td><code>GET</code></td></tr>
+  <tr><td>Update</td><td><code>PUT</code></td></tr>
+  <tr><td>Delete</td><td><code>DELETE</code></td></tr>
+</table>
+<table class="codes">
+  <tr><th colspan="4">Status codes (2xx ok &middot; 4xx client &middot; 5xx server)</th></tr>
+  <tr><td>200</td><td>OK</td><td>401</td><td>Unauthorized</td></tr>
+  <tr><td>304</td><td>Not Modified</td><td>404</td><td>Not Found</td></tr>
+  <tr><td>400</td><td>Bad Request</td><td>409</td><td>Conflict</td></tr>
+  <tr><td>500</td><td>Internal Server Error</td><td>413</td><td>Entity Too Large</td></tr>
+</table>
+</div>
+<ul>
+  <li><code>/players/<b>Rodgers</b>/stats?<b>since</b>=2010</code>: <code>Rodgers</code> is a <b>path</b> parameter; <code>since</code> is a <b>query</b> parameter.</li>
+  <li>A JSON body needs <code>JSON.stringify</code> + the header <code>Content-Type: application/json</code>. <b>Pre-flight</b> = an extra <code>OPTIONS</code> request (CORS).</li>
+  <li><code>useRef()</code> &rarr; <code>{ current }</code>, which persists across renders; changing it does <b>not</b> re-render. Read <code>ref.current.value</code> for uncontrolled inputs.</li>
+  <li><b>JWT:</b> a signed, short-lived access token used in lieu of a username and password. It is stored in an <b>HTTP-Only cookie</b> (set via <code>Set-Cookie</code>, unreadable by JS). Requests that set or use cookies need <code>credentials: "include"</code>.</li>
+  <li><code>npm run build</code> transpiles JSX into a bundle of HTML, CSS, and JS (one <code>index.html</code>).</li>
+</ul>
+
+<!-- ===================================================== 13 -->
+<h2 id="l13" data-tag="Design"><span class="num">13</span> Accessibility</h2>
+<ul>
+  <li><b>Usability:</b> the effectiveness, efficiency, and satisfaction with which specified users achieve specified tasks in a particular environment.</li>
+  <li><b>Accessibility:</b> usability by people with the widest range of capabilities (focus: people with disabilities).</li>
+  <li><b>Disability</b> has 3 dimensions: <i>impairment</i> &rarr; <i>activity limitation</i> &rarr; <i>participation restrictions</i>.</li>
+  <li><b>Impairments:</b> <i>sensory</i> (low vision, blindness, color blindness, deafness) &middot; <i>physical</i> (motor/mobility) &middot; <i>cognitive</i> (learning, memory, seizures). They vary in severity and structure.</li>
+  <li><b>Over time:</b> <i>permanent</i> (missing limb) &middot; <i>temporary</i> (broken arm) &middot; <i>situational</i> (low light, noise).</li>
+  <li><b>Medical model:</b> disability is a <i>personal attribute</i>. <b>Social model:</b> it is <i>context-dependent</i> (disabled by societal barriers). <b>Ability + Context = Disability</b>.</li>
+  <li>Accessibility is achieved through <b>accessible design</b> and <b>assistive technologies</b>.</li>
+  <li><b>Universal design:</b> products and environments usable by all people, to the greatest extent possible, without adaptation or specialized design. What helps some helps all (e.g. closed captions).</li>
+</ul>
+<table class="wrap split">
+  <tr><th style="width:33%">UD principle</th><th>Key guidelines</th></tr>
+  <tr><td>1. Equitable use</td><td>same means of use for all; don&rsquo;t segregate or stigmatize; appealing to all</td></tr>
+  <tr><td>2. Flexibility in use</td><td>choice of methods; either hand; precision; the user&rsquo;s pace</td></tr>
+  <tr><td>3. Simple &amp; intuitive</td><td>no extra complexity; meets expectations; prompts and feedback</td></tr>
+  <tr><td>4. Perceptible info</td><td>redundant modes (pictorial, verbal, tactile); contrast; legibility</td></tr>
+  <tr><td>5. Tolerance for error</td><td>minimize hazards; warnings; fail-safes</td></tr>
+  <tr><td>6. Low physical effort</td><td>neutral posture; reasonable force; minimal repetition</td></tr>
+  <tr><td>7. Size &amp; space</td><td>line of sight; comfortable reach; room for assistive devices</td></tr>
+</table>
+<ul>
+  <li><b>WCAG</b> levels: <b>A</b> (lowest) &rarr; <b>AA</b> &rarr; <b>AAA</b>. Level A examples: a label for every form control, no skipped header levels, correctable errors, sufficient color contrast. This is the floor! Test manually and with automated tools (WAVE, AXE).</li>
+  <li><b>Assistive technologies</b> are specialized tools that close accessibility gaps: screen readers (JAWS, NVDA, VoiceOver, TalkBack), screen magnifiers, text readers, Braille displays, alternative input (head/mouth wands, eye tracking, sip-and-puff, speech), and AAC (for people who can&rsquo;t use verbal speech).</li>
+</ul>
+
+</main>
+</body>
+</html>
